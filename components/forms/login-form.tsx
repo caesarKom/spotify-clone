@@ -1,18 +1,55 @@
 import { useAuthModal } from "@/hooks/useAuthModal"
+import { UserContext } from "@/hooks/useUser"
 import axios from "axios"
+import { useContext } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "react-toastify"
+
+interface UserProps {
+  email: string
+  password: string
+}
 
 export const LoginForm = () => {
-  const { onOpenRegister } = useAuthModal()
+  const { onOpenRegister, onClose } = useAuthModal()
+  const { setUser, setAccessToken } = useContext(UserContext)
   const {
     handleSubmit,
     register,
-    getValues,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
+
+  const loginUser = async (data: UserProps) => {
+    try {
+      await axios
+        .post("http://192.168.0.7:5001/api/user/login", {
+          data,
+        })
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message)
+            setUser(res.data.user)
+            setAccessToken(res.data.accessToken)
+            onClose()
+          } else {
+            toast.error("Something went wrong")
+          }
+        })
+    } catch (err: any) {
+      toast.error(err.message)
+    }
+  }
 
   return (
-    <form className="mx-auto max-w-screen-md">
+    <form
+      onSubmit={handleSubmit(loginUser)}
+      className="mx-auto max-w-screen-md"
+    >
       <div className="mb-4">
         <label htmlFor="email">Email</label>
         <input
@@ -32,7 +69,7 @@ export const LoginForm = () => {
       <div className="mb-4">
         <label htmlFor="password">Password</label>
         <input
-          type="text"
+          type="password"
           className="w-full border border-neutral-500 px-2.5 py-2.5 rounded-md outline-none pl-8 mt-2 placeholder:text-neutral-500 focus:border-neutral-700 focus:bg-neutral-800"
           id="password"
           autoFocus

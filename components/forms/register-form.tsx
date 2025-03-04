@@ -1,19 +1,57 @@
 import { useAuthModal } from "@/hooks/useAuthModal"
 import axios from "axios"
 import { useForm } from "react-hook-form"
+import { toast } from "react-toastify"
+
+interface UserProps {
+  name: string
+  email: string
+  password: string
+}
 
 export const RegisterForm = () => {
   const { onOpenLogin } = useAuthModal()
+
+  const registerUser = async (data: UserProps) => {
+    try {
+      await axios
+        .post("http://localhost:5001/api/user/register", {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        })
+        .then((res) => {
+          if (res.data.success) {
+            toast.success(res.data.message)
+            onOpenLogin()
+          } else {
+            toast.error("Something went wrong")
+          }
+        })
+    } catch (err: any) {
+      toast.error(err.message)
+    }
+  }
 
   const {
     handleSubmit,
     register,
     getValues,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  })
 
   return (
-    <form className="mx-auto max-w-screen-md">
+    <form
+      onSubmit={handleSubmit(registerUser)}
+      className="mx-auto max-w-screen-md"
+    >
       <div className="mb-4">
         <label htmlFor="name">Name</label>
         <input

@@ -1,6 +1,7 @@
 "use client"
 
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useState, useEffect } from "react"
+import axios from "axios"
 
 type UserContexType = {
   accessToken: string | null
@@ -19,9 +20,22 @@ export const MyUserContextProvider = (props: Props) => {
   // get user
   // get subscryption
 
+  useEffect(() => {
+    const checkloggedUser = async () => {
+      const res = await axios.post(
+        "http://192.168.0.7:5001/api/user/checkLoginUser"
+      )
+      //setUser(res.data.data)
+      console.log("CONTEXT ---> ", res.data)
+    }
+    checkloggedUser()
+  }, [])
+
   const value = {
     accessToken,
     user,
+    setUser,
+    setAccessToken,
   }
 
   return <UserContext.Provider value={value} {...props} />
