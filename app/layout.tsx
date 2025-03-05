@@ -4,7 +4,8 @@ import "./globals.css"
 import { Sidebar } from "@/components/Sidebar"
 import UserProvider from "@/components/providers/user-provider"
 import { ModalProvider } from "@/components/providers/modal-provider"
-import { ToastContainer } from "react-toastify"
+import { ToasterProvider } from "@/components/providers/toast-provider"
+import { getSongsByUserId } from "@/actions/getSongs"
 
 const figtree = Figtree({
   subsets: ["latin"],
@@ -15,18 +16,20 @@ export const metadata: Metadata = {
   description: "Listen to music!",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const userSongs = await getSongsByUserId("cm7ud88vj0000u2v8ycy1k64p")
+
   return (
     <html lang="en">
       <body className={`${figtree.className} antialiased`}>
+        <ToasterProvider />
         <UserProvider>
-          <ToastContainer />
           <ModalProvider />
-          <Sidebar>{children}</Sidebar>
+          <Sidebar songs={userSongs}>{children}</Sidebar>
         </UserProvider>
       </body>
     </html>

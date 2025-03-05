@@ -2,9 +2,11 @@
 
 import { createContext, useContext, useState, useEffect } from "react"
 import axios from "axios"
+import { User } from "@/types"
 
 type UserContexType = {
   accessToken: string | null
+  user: User | null
 }
 
 export const UserContext = createContext<UserContexType | undefined>(undefined)
@@ -14,7 +16,7 @@ export interface Props {
 }
 
 export const MyUserContextProvider = (props: Props) => {
-  const [isLoading, setIsLoading] = useState(false)
+  //const [isLoading, setIsLoading] = useState(false)
   const [accessToken, setAccessToken] = useState(null)
   const [user, setUser] = useState(null)
   // get user

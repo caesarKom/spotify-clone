@@ -1,7 +1,7 @@
 import { useAuthModal } from "@/hooks/useAuthModal"
 import axios from "axios"
 import { useForm } from "react-hook-form"
-import { toast } from "react-toastify"
+import { toast } from "react-hot-toast"
 
 interface UserProps {
   name: string

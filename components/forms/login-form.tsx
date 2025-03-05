@@ -1,9 +1,11 @@
+"use client"
+
 import { useAuthModal } from "@/hooks/useAuthModal"
 import { UserContext } from "@/hooks/useUser"
 import axios from "axios"
 import { useContext } from "react"
 import { useForm } from "react-hook-form"
-import { toast } from "react-toastify"
+import { toast } from "react-hot-toast"
 
 interface UserProps {
   email: string
@@ -29,6 +31,10 @@ export const LoginForm = () => {
       await axios
         .post("http://192.168.0.7:5001/api/user/login", {
           data,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, // Ensure Axios includes cookies in the request
         })
         .then((res) => {
           if (res.data.success) {

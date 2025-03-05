@@ -10,6 +10,7 @@ import { useAuthModal } from "@/hooks/useAuthModal"
 import { useContext } from "react"
 import { UserContext } from "@/hooks/useUser"
 import { FaUserAlt } from "react-icons/fa"
+import axios from "axios"
 
 interface HeaderProps {
   children: React.ReactNode
