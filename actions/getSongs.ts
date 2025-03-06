@@ -1,7 +1,9 @@
 import axios from "axios"
 
 export const getSongs = async () => {
-  const response = await axios.get(`${process.env.API_URL}/song/list`)
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/song/list`
+  )
   if (response.data.success) {
     return response.data.data
   }
@@ -9,23 +11,40 @@ export const getSongs = async () => {
 }
 
 export const getSongsByUserId = async (userId: string) => {
-  const response = await axios.get(`${process.env.API_URL}/song/${userId}`)
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/song/${userId}`
+  )
   if (response.data.success) {
     return response.data.data
   }
   return []
 }
 
-export const getSongsbyTitle = async (title: string) => {
-  // if (!title) {
-  //   return []
-  // }
-  const response = await axios.get(`${process.env.API_URL}/song/search`, {
-    params: { title },
-  })
-  console.log("Response ======> ", response.data)
+export const getSongbyTitle = async (title: string) => {
+  if (!title) {
+    return []
+  }
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/song/search/${title}`
+  )
+
   if (response.data.success) {
     return response.data.data
+  }
+  return []
+}
+
+export const getLikedSongs = async (userId: string) => {
+  if (!userId) return []
+
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/song/list-liked/${userId}`
+  )
+
+  if (response.data.success) {
+    return response.data.data.map((item) => ({
+      ...item.songs,
+    }))
   }
   return []
 }

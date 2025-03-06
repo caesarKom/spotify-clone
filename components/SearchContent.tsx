@@ -1,7 +1,8 @@
 "use client"
 
 import { Song } from "@/types"
-import { MediaItem } from "./MediaItem"
+import { MediaItem } from "@/components/MediaItem"
+import { LikeButton } from "@/components/LikeButton"
 
 interface SearchContentProps {
   songs: Song[]
@@ -22,6 +23,7 @@ export const SearchContent = ({ songs }: SearchContentProps) => {
           <div className="flex-1">
             <MediaItem onClick={() => {}} data={song} />
           </div>
+          <LikeButton songId={song.id} />
         </div>
       ))}
     </div>
