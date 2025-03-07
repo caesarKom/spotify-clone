@@ -19,7 +19,7 @@ export const LikeButton = ({ songId }: LikeButtonProps) => {
   const [isLiked, setIsLiked] = useState(false)
 
   useEffect(() => {
-    if (!user?.id) return
+    if (!user?.id || !songId) return
 
     const fetchData = async () => {
       const res = await axios.post(
@@ -29,7 +29,8 @@ export const LikeButton = ({ songId }: LikeButtonProps) => {
           songId: songId,
         }
       )
-      if (!res.data.data === null) {
+
+      if (res.data?.data?.songId) {
         setIsLiked(true)
       }
     }

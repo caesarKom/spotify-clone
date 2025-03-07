@@ -9,7 +9,7 @@ interface MediaItemProps {
 export const MediaItem = ({ data, onClick }: MediaItemProps) => {
   const handleClick = () => {
     if (onClick) {
-      return onClick(data.id)
+      return onClick(data?.id)
     }
   }
 
@@ -21,7 +21,7 @@ export const MediaItem = ({ data, onClick }: MediaItemProps) => {
       <div className="relative rounded-md min-h-12 min-w-12 overflow-hidden">
         <Image
           src={
-            `http://localhost:5001/api/storage/${data.image_path}` ||
+            `${process.env.NEXT_PUBLIC_API_URL}/storage/${data?.image_path}` ||
             "/images/note.png"
           }
           alt="Image"
@@ -29,8 +29,8 @@ export const MediaItem = ({ data, onClick }: MediaItemProps) => {
         />
       </div>
       <div className="flex flex-col gap-y-1 overflow-hidden">
-        <p className="text-white truncate">{data.title}</p>
-        <p className="text-neutral-400 text-sm truncate">{data.author}</p>
+        <p className="text-white truncate">{data?.title}</p>
+        <p className="text-neutral-400 text-sm truncate">{data?.author}</p>
       </div>
     </div>
   )

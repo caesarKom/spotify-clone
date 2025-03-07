@@ -1,6 +1,8 @@
 "use client"
 
+import { LikeButton } from "@/components/LikeButton"
 import { MediaItem } from "@/components/MediaItem"
+import useOnPlay from "@/hooks/useOnPlay"
 import { useUser } from "@/hooks/useUser"
 import { Song } from "@/types"
 import { useRouter } from "next/navigation"
@@ -13,8 +15,7 @@ interface LikedContentProps {
 export const LikedContent = ({ songs }: LikedContentProps) => {
   const router = useRouter()
   const { user } = useUser()
-
-  console.log("Liked song ", songs)
+  const onPlay = useOnPlay(songs)
 
   useEffect(() => {
     if (!user) {
@@ -35,8 +36,9 @@ export const LikedContent = ({ songs }: LikedContentProps) => {
       {songs.map((song) => (
         <div className="flex items-center gap-x-4 w-full" key={song.id}>
           <div className="flex-1">
-            <MediaItem onClick={() => {}} data={song} />
+            <MediaItem onClick={(id: string) => onPlay(id)} data={song} />
           </div>
+          <LikeButton songId={song.id} />
         </div>
       ))}
     </div>

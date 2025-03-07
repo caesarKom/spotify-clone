@@ -20,6 +20,16 @@ export const getSongsByUserId = async (userId: string) => {
   return []
 }
 
+export const getSongsById = async (id: string) => {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/song/songs/${id}`
+  )
+  if (response.data.success) {
+    return response.data.data
+  }
+  return []
+}
+
 export const getSongbyTitle = async (title: string) => {
   if (!title) {
     return []
