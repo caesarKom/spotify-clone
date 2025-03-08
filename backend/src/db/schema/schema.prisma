@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["prismaSchemaFolder", "fullTextSearchPostgres"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id       String  @id @default(cuid())
+    name     String
+    email    String  @unique
+    password String?
+    avatar   String?
+    apiKey   String  @unique @default(cuid())
+
+    songs     Song[]
+    likedSong LikedSong[]
+}
+
+model Song {
+    id         String   @id @default(cuid())
+    title      String
+    song_path  String
+    image_path String
+    author     String
+    userId     String
+    createdAt  DateTime @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    LikedSong LikedSong[]
+}
+
+model LikedSong {
+    id     String @id @default(cuid())
+    songId String
+    userId String
+
+    songs Song @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
