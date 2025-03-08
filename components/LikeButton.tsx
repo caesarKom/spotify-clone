@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuthModal } from "@/hooks/useAuthModal"
-import { useUser } from "@/hooks/useUser"
+import useUserSession from "@/hooks/useUserSession"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -15,7 +15,7 @@ interface LikeButtonProps {
 export const LikeButton = ({ songId }: LikeButtonProps) => {
   const router = useRouter()
   const authModal = useAuthModal()
-  const { user } = useUser()
+  const { user } = useUserSession()
   const [isLiked, setIsLiked] = useState(false)
 
   useEffect(() => {

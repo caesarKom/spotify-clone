@@ -7,10 +7,8 @@ import { RxCaretLeft, RxCaretRight } from "react-icons/rx"
 import { twMerge } from "tailwind-merge"
 import Button from "./Button"
 import { useAuthModal } from "@/hooks/useAuthModal"
-import { useContext } from "react"
-import { UserContext } from "@/hooks/useUser"
 import { FaUserAlt } from "react-icons/fa"
-import axios from "axios"
+import useUserSession from "@/hooks/useUserSession"
 
 interface HeaderProps {
   children: React.ReactNode
@@ -20,13 +18,18 @@ interface HeaderProps {
 export const Header = ({ children, className }: HeaderProps) => {
   const router = useRouter()
   const { onOpenLogin, onOpenRegister } = useAuthModal()
-  const { user, setUser, setAccessToken } = useContext(UserContext)
+  const { user, logout } = useUserSession()
 
   const logoutUser = async () => {
-    const res = await axios.post("http://192.168.0.7:5001/api/user/logout")
-    setUser(null)
-    setAccessToken(null)
-    console.log("Logout data ---> ", res.data)
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/logout`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
+      },
+    })
+    logout()
   }
 
   return (

@@ -1,20 +1,18 @@
-"use client"
-
 import { useAuthModal } from "@/hooks/useAuthModal"
-import { UserContext } from "@/hooks/useUser"
-import axios from "axios"
-import { useContext } from "react"
+import useUserSession from "@/hooks/useUserSession"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 
 interface UserProps {
   email: string
   password: string
+  message?: string | null
 }
 
 export const LoginForm = () => {
   const { onOpenRegister, onClose } = useAuthModal()
-  const { setUser, setAccessToken } = useContext(UserContext)
+  //const { setUser, setAccessToken } = useContext(UserContext)
+  const { setUser, setTokens } = useUserSession.getState()
   const {
     handleSubmit,
     register,
@@ -28,26 +26,29 @@ export const LoginForm = () => {
 
   const loginUser = async (data: UserProps) => {
     try {
-      await axios
-        .post("http://192.168.0.7:5001/api/user/login", {
-          data,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true, // Ensure Axios includes cookies in the request
-        })
-        .then((res) => {
-          if (res.data.success) {
-            toast.success(res.data.message)
-            setUser(res.data.user)
-            setAccessToken(res.data.accessToken)
-            onClose()
-          } else {
-            toast.error("Something went wrong")
-          }
-        })
-    } catch (err: any) {
-      toast.error(err.message)
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/login`, {
+        method: "POST",
+        body: JSON.stringify({ data }),
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json;charset=UTF-8",
+        },
+      }).then(async (res) => {
+        if (res.ok) {
+          const data = await res.json()
+
+          toast.success(data.message)
+          setUser(data.user)
+          setTokens(data.accessToken)
+          onClose()
+        } else {
+          toast.error("Something went wrong")
+        }
+      })
+    } catch (err) {
+      console.log(err)
+      toast.error(data.message!)
     }
   }
 

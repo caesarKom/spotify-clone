@@ -7,6 +7,15 @@ export interface User {
   apiKey: string
 }
 
+export interface SessionState {
+  user: User | null
+  accessToken: string | null
+  refreshToken?: string | null
+  setUser: (user: User) => void
+  setTokens: (accessToken: string, refreshToken?: string) => void
+  logout: () => void
+}
+
 export interface Song {
   id: string
   userId: string

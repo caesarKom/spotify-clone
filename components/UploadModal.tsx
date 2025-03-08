@@ -7,15 +7,15 @@ import { useState } from "react"
 import Input from "./Input"
 import Button from "./Button"
 import toast from "react-hot-toast"
-import { useUser } from "@/hooks/useUser"
 import axios from "axios"
 import { useRouter } from "next/navigation"
+import useUserSession from "@/hooks/useUserSession"
 
 export const Uploadmodal = () => {
   const router = useRouter()
   const [isloading, setIsLoading] = useState(false)
   const uploadModal = useUploadModal()
-  const { user } = useUser()
+  const { user } = useUserSession()
 
   const { register, handleSubmit, reset } = useForm<FieldValue>({
     defaultValues: {
@@ -41,7 +41,7 @@ export const Uploadmodal = () => {
       }
 
       const res = await axios.post(
-        `http://192.168.0.7:5001/api/song/add`,
+        `${process.env.NEXT_PUBLIC_API_URL}/song/add`,
         {
           title,
           userId: user.id,

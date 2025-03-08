@@ -31,7 +31,7 @@ export async function register(req, res) {
   }
 }
 
-export async function login(req, res, next) {
+export async function login(req, res) {
   try {
     const { email, password } = await req.body.data
 
@@ -47,14 +47,14 @@ export async function login(req, res, next) {
 
     //remove user password from output
     userdb.password = undefined
-    const expires = new Date(Date.now() + 60 * 60 * 1000)
-    res.cookie("_j", token, {
-      expires: expires,
+
+    res.cookie("asa", token, {
+      expires: new Date(Date.now() + 8 * 3600000), // cookie will be removed after 8 hours
       httpOnly: true,
-      secure: req.secure || req.headers["x-forwarded-proto"] === "https",
-      sameSite: "none",
+      secure: false, // req.secure || req.headers["x-forwarded-proto"] === "https",
+      sameSite: "lax", // lax Prevent CSRF attacks
       path: "/",
-      domain: "localhost",
+      //domain: "localhost",
     })
 
     res.status(200).json({ success: true, user: userdb, accessToken: token })
@@ -72,10 +72,10 @@ const signToken = (id) => {
 }
 
 //check if user is logged in
-export async function checkLoggedUser(req, res, next) {
+export async function checkLoggedUser(req, res) {
   let currentUser
-  if (req.cookies._j) {
-    const token = req.cookies._j
+  if (req.cookies.asa) {
+    const token = req.cookies.asa
     const decoded = await jwt.verify(token, process.env.JWT_SECRET)
     currentUser = await db.user.findUnique({ where: { id: decoded.id } })
   } else {
@@ -85,9 +85,9 @@ export async function checkLoggedUser(req, res, next) {
   res.status(200).json(currentUser)
 }
 
-//log user out
+//log out
 export async function logout(req, res) {
-  res.cookie("_j", "loggedout", {
+  res.cookie("asa", "loggedout", {
     expires: new Date(Date.now() + 1 * 1000),
     httpOnly: true,
   })

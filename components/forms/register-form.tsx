@@ -15,7 +15,7 @@ export const RegisterForm = () => {
   const registerUser = async (data: UserProps) => {
     try {
       await axios
-        .post("http://localhost:5001/api/user/register", {
+        .post(`${process.env.NEXT_PUBLIC_API_URL}/user/register`, {
           name: data.name,
           email: data.email,
           password: data.password,

@@ -2,19 +2,19 @@
 
 import { useAuthModal } from "@/hooks/useAuthModal"
 import { useUploadModal } from "@/hooks/useUploadModal"
-import { useUser } from "@/hooks/useUser"
 import { Song } from "@/types"
 import { AiOutlinePlus } from "react-icons/ai"
 import { TbPlaylist } from "react-icons/tb"
 import { MediaItem } from "./MediaItem"
 import useOnPlay from "@/hooks/useOnPlay"
+import useUserSession from "@/hooks/useUserSession"
 
 interface LibraryProps {
   songs: Song[]
 }
 
 export const Library = ({ songs }: LibraryProps) => {
-  const { user } = useUser()
+  const { user } = useUserSession()
   const authModal = useAuthModal()
   const uploadModal = useUploadModal()
   const onPlay = useOnPlay(songs)

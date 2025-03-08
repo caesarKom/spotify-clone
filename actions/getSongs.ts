@@ -11,6 +11,7 @@ export const getSongs = async () => {
 }
 
 export const getSongsByUserId = async (userId: string) => {
+  if (!userId) return
   const response = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/song/${userId}`
   )

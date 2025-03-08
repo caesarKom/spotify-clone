@@ -1,8 +1,8 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect } from "react"
-import axios from "axios"
 import { User } from "@/types"
+import useUserSession from "./useUserSession"
 
 type UserContexType = {
   accessToken: string | null
@@ -18,17 +18,27 @@ export interface Props {
 export const MyUserContextProvider = (props: Props) => {
   //const [isLoading, setIsLoading] = useState(false)
   const [accessToken, setAccessToken] = useState(null)
-  const [user, setUser] = useState(null)
+  const { user, setUser } = useUserSession()
   // get user
   // get subscryption
 
   useEffect(() => {
     const checkloggedUser = async () => {
-      const res = await axios.post(
-        "http://192.168.0.7:5001/api/user/checkLoginUser"
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/checkLoginUser`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+        }
       )
-      //setUser(res.data.data)
-      console.log("CONTEXT ---> ", res.data)
+      if (res.ok) {
+        //setUser(res?.data?.data)
+        console.log("CONTEXT ---> ", await res.json())
+      }
     }
     checkloggedUser()
   }, [])

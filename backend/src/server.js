@@ -11,7 +11,14 @@ const port = process.env.PORT || 5005
 
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({ credentials: true }))
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.HOST,
+    sameSite: "none",
+    exposedHeaders: ["set-cookie"],
+  })
+)
 app.use(express.urlencoded({ extended: true }))
 // Serve images http://localhost:3000/api/image/1724001944893-_d929b68d.jpg
 app.use("/api/storage", express.static("uploads"))
