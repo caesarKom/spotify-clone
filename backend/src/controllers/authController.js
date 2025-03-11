@@ -80,6 +80,10 @@ export async function checkLoggedUser(req, res) {
     currentUser = await db.user.findUnique({ where: { id: decoded.id } })
   } else {
     currentUser = null
+    res.cookie("asa", "loggedout", {
+      expires: new Date(Date.now() + 1 * 1000),
+      httpOnly: true,
+    })
   }
 
   res.status(200).json(currentUser)

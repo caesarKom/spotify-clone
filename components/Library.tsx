@@ -8,15 +8,14 @@ import { TbPlaylist } from "react-icons/tb"
 import { MediaItem } from "./MediaItem"
 import useOnPlay from "@/hooks/useOnPlay"
 import useUserSession from "@/hooks/useUserSession"
+import { useEffect, useState } from "react"
+import { getSongsByUserId } from "@/actions/getSongs"
 
-interface LibraryProps {
-  songs: Song[]
-}
-
-export const Library = ({ songs }: LibraryProps) => {
+export const Library = () => {
   const { user } = useUserSession()
   const authModal = useAuthModal()
   const uploadModal = useUploadModal()
+  const [songs, setSongs] = useState<Song[]>([])
   const onPlay = useOnPlay(songs)
 
   const onClick = () => {
@@ -25,6 +24,17 @@ export const Library = ({ songs }: LibraryProps) => {
     }
     return uploadModal.onOpen()
   }
+
+  useEffect(() => {
+    const fetchSongs = async () => {
+      if (!user) {
+        return setSongs([])
+      }
+      const data = await getSongsByUserId(user?.id)
+      setSongs(data)
+    }
+    fetchSongs()
+  }, [user])
 
   return (
     <div className="flex flex-col">
@@ -42,6 +52,9 @@ export const Library = ({ songs }: LibraryProps) => {
       </div>
 
       <div className="flex flex-col gap-y-2 mt-2 px-3">
+        {songs.length === 0 && (
+          <div className="text-center mt-4">No songs found!</div>
+        )}
         {user &&
           songs?.map((song) => (
             <MediaItem

@@ -18,9 +18,7 @@ export interface Props {
 export const MyUserContextProvider = (props: Props) => {
   //const [isLoading, setIsLoading] = useState(false)
   const [accessToken, setAccessToken] = useState(null)
-  const { user, setUser } = useUserSession()
-  // get user
-  // get subscryption
+  const { user, setUser, logout } = useUserSession()
 
   useEffect(() => {
     const checkloggedUser = async () => {
@@ -36,8 +34,10 @@ export const MyUserContextProvider = (props: Props) => {
         }
       )
       if (res.ok) {
-        //setUser(res?.data?.data)
-        console.log("CONTEXT ---> ", await res.json())
+        const data = await res.json()
+        if (data === null) {
+          logout()
+        }
       }
     }
     checkloggedUser()

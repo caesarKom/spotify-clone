@@ -5,7 +5,6 @@ import { Sidebar } from "@/components/Sidebar"
 import UserProvider from "@/components/providers/user-provider"
 import { ModalProvider } from "@/components/providers/modal-provider"
 import { ToasterProvider } from "@/components/providers/toast-provider"
-import { getSongsByUserId } from "@/actions/getSongs"
 import { Player } from "@/components/Player"
 
 const figtree = Figtree({
@@ -22,15 +21,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const userSongs = await getSongsByUserId("cm7ud88vj0000u2v8ycy1k64p")
-
   return (
     <html lang="en">
       <body className={`${figtree.className} antialiased`}>
         <ToasterProvider />
         <UserProvider>
           <ModalProvider />
-          <Sidebar songs={userSongs}>{children}</Sidebar>
+          <Sidebar>{children}</Sidebar>
           <Player />
         </UserProvider>
       </body>
